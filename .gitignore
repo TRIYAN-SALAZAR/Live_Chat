@@ -1,0 +1,12 @@
+#dependecies
+/node_modules/
+
+# Ignorar archivos temporales
+*.tmp
+
+# Ignorar archivos de configuración sensibles
+config.ini
+
+
+# Ignorar archivos generados por el sistema operativo
+.DS_Store
