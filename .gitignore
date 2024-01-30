@@ -6,7 +6,8 @@
 
 # Ignorar archivos de configuración sensibles
 config.ini
-
+.ENV
 
 # Ignorar archivos generados por el sistema operativo
 .DS_Store
+
