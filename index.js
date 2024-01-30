@@ -3,8 +3,8 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 const cors = require('cors');
-const mongoDB = require('./databases/conectMongoDB');
-const postgretSQL = require('./databases/conectPostgretSQL');
+const mongoDB = require('./databases/conectToMongoDB');
+const postgretSQL = require('./databases/conectToPostgretSQL');
 
 const app = express();
 const server = http.createServer(app);
