@@ -21,6 +21,9 @@ app.use(express.json());
 
 app.use(morgan('dev'));
 
+mongoDB();
+postgretSQL();
+
 app.set('port', process.env.PORT || 3000);
 
 app.listen(app.get('port'), () => {
