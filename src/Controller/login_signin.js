@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const User = require('../Schemas/user');
 const idgenerate = require('../Services/idGenerate');
 const control = {}
@@ -17,10 +19,11 @@ control.logIn = async (req, res) => {
         if (usenamerExists) throw new Error('Username is already in use');
 
         const id = await idgenerate();
+        const passwordHash = await bcrypt.hash(password, 8);
         const newUser = await User.create({
             id: id,
             username: username,
-            password: password,
+            password: passwordHash,
             first_name: first_name,
             last_name: last_name
         });
@@ -30,20 +33,23 @@ control.logIn = async (req, res) => {
         return res.status(201).json({ message: 'login Successful'})
     }
     catch (err) {
-        console.log(err);
-        return res.status(400).json({ message: err })
+        return res.status(400).json({ message: err.message })
     }
 }
 
 control.signin = async (req, res) => {
-    const { username, password } = req.body;
-
     try {
-        if (!username || !password) {
-            return res.status(400).send('All fields are required')
-        }
 
-        res.json({ message: 'Signin Successful' })
+        const { username, password } = req.body;
+        if (!username || !password) return res.status(400).send('All fields are required');
+
+        const user = await User.findOne({ where: { username: username } });
+        if (!user) return res.status(400).send('User not found');
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) return res.status(402).json({ message: 'Incorrect password' });
+
+        return res.json({ message: 'Signin Successful' })
     }
     catch (err) {
         return res.status(400).send(err)
