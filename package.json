@@ -4,7 +4,8 @@
   "description": "Is a server for an application real-time chat",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon index.js"
   },
   "author": "triyan-salazar",
   "license": "ISC",

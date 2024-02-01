@@ -3,18 +3,21 @@ const colors = require('colors');
 const dotenv = require('dotenv');
 
 dotenv.config();
+const {
+    PASSWORD_USER_POST,
+    DATABASE,
+    USER_FOR_DATABASE
+} = process.env;
+
+const sequelize = new Sequelize(DATABASE, USER_FOR_DATABASE, PASSWORD_USER_POST, {
+    host: 'localhost',
+    dialect: 'postgres',
+    port: 5432,
+    define: {
+        freezeTableName: true
+    }
+});
 async function connectToDatabase() {
-    const {
-        PASSWORD_USER_POST,
-        DATABASE,
-        USER_FOR_DATABASE
-    } = process.env;
-    
-    const sequelize = new Sequelize(DATABASE, USER_FOR_DATABASE, PASSWORD_USER_POST, {
-        host: 'localhost',
-        dialect: 'postgres',
-        port: 5432
-    });
 
     try {
         await sequelize.authenticate();
@@ -25,4 +28,4 @@ async function connectToDatabase() {
 
 }
 
-module.exports = connectToDatabase;
+module.exports = { connectToDatabase, sequelize };
