@@ -4,7 +4,6 @@ const http = require('http');
 const socketIO = require('socket.io');
 const cors = require('cors');
 const mongoDB = require('./src/databases/conectToMongoDB');
-const { connectToDatabase } = require('./src/databases/conectToPostgretSQL');
 const dotenv = require('dotenv');
 
 const morgan = require('morgan');
@@ -25,7 +24,6 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 mongoDB();
-connectToDatabase();
 
 app.set('port', process.env.PORT || 3000);
 

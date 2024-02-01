@@ -1,8 +1,6 @@
 const { Sequelize } = require('sequelize');
 const colors = require('colors');
-const dotenv = require('dotenv');
 
-dotenv.config();
 const {
     PASSWORD_USER_POST,
     DATABASE,
@@ -17,6 +15,7 @@ const sequelize = new Sequelize(DATABASE, USER_FOR_DATABASE, PASSWORD_USER_POST,
         freezeTableName: true
     }
 });
+
 async function connectToDatabase() {
 
     try {
