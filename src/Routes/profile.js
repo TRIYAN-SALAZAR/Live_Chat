@@ -1,8 +1,9 @@
 const { Router } = require('express');
 const router = Router();
 
-router.get('/', (req, res) => {
-    
-});
+const { getProfile } = require('../Controller/profile');
+const isAuthenticated = require('../Services/authenticate');
+
+router.get('/', isAuthenticated, getProfile);
 
 module.exports = router;

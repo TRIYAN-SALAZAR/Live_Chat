@@ -1,8 +1,10 @@
 #dependecies
 /node_modules/
+/public/
 
 # Ignorar archivos temporales
 *.tmp
+*.html
 
 # Ignorar archivos de configuración sensibles
 config.ini

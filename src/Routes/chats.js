@@ -1,8 +1,13 @@
-const { Router } = require('express')
+const { Router } = require('express');
 const router = Router();
 
-const { getChats } = require('../Controller/chats')
+const { getChats } = require('../Controller/chats');
+const isAuthenticated = require('../Services/authenticate');
 
-router.get('/chat/:id', getChats);
+router.route('/')
+    .get(isAuthenticated, getChats)
+
+router.route('/:id')
+    .get(isAuthenticated, getChats)
 
 module.exports = router;
