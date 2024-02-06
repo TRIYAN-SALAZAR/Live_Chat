@@ -1,5 +1,5 @@
 const express = require('express');
-const session = require('express-session')
+const session = require('express-session');
 const http = require('http');
 const socketIO = require('socket.io');
 const cors = require('cors');
@@ -31,7 +31,7 @@ app.use(morgan('dev'));
 app.use((req, res, next) => {
     res.locals.session = req.session;
     next();
-})
+});
 app.use(session({
     secret: 'keyboard cat123456789',
     resave: false,
@@ -41,7 +41,7 @@ app.use(session({
         maxAge: 3600000,
         httpOnly: true
     }
-}))
+}));
 
 app.set('port', process.env.PORT || 3000);
 
