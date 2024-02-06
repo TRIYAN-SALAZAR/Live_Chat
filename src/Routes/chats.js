@@ -8,6 +8,6 @@ router.route('/')
     .get(isAuthenticated, getChats)
 
 router.route('/:id')
-    .get(isAuthenticated, getChats)
+    .get(isAuthenticated, getChat)
 
 module.exports = router;

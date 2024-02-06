@@ -20,11 +20,14 @@ const Profile = require('./src/Routes/profile');
 const Chats = require('./src/Routes/chats');
 
 dotenv.config();
+mongoDB();
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(morgan('dev'));
+
 app.use((req, res, next) => {
     res.locals.session = req.session;
     next();
@@ -40,11 +43,9 @@ app.use(session({
     }
 }))
 
-mongoDB();
-
 app.set('port', process.env.PORT || 3000);
 
-// gestion de pruebas
+// gestion de pruebas locales modo donramon osea toda chafa
 app.get('/signin', (req, res) => {
     res.sendFile(__dirname + '/public/signin.html');
 });

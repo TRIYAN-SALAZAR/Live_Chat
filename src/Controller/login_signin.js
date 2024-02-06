@@ -27,7 +27,6 @@ control.logIn = async (req, res) => {
             first_name: first_name,
             last_name: last_name
         });
-
         if (!newUser) throw new Error('Server error');
 
         return res.status(201).json({ message: 'login Successful' })
