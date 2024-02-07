@@ -4,7 +4,9 @@ function isAuthenticated (req, res, next) {
         next();
     }
     else {
-        return res.redirect('/login');
+        return res.status(400).json({
+            message: 'Unauthorized please sign in or Log In',
+        });
     }
 }
 

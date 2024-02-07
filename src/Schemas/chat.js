@@ -7,11 +7,12 @@ const chatSchema = new Schema({
     },
     participants: {
         type: [Object],
-        default: [Object]
+        require: true
     },
     refMessage: {
         type: Schema.Types.ObjectId,
-        ref: 'Message'
+        ref: 'Message',
+        require: true
     }
 });
 
