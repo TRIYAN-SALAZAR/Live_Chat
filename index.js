@@ -14,8 +14,9 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-const Login = require('./src/Routes/login');
-const Signin = require('./src/Routes/signin');
+const Login = require('./src/Routes/logIn');
+const Signin = require('./src/Routes/signIn');
+
 const Profile = require('./src/Routes/profile');
 const Chats = require('./src/Routes/chats');
 

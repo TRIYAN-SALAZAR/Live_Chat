@@ -5,7 +5,7 @@ const idgenerate = require('../Services/idGenerate');
 
 const control = {}
 
-control.logIn = async (req, res) => {
+control.signIn = async (req, res) => {
     try {
         const {
             username,
@@ -29,17 +29,17 @@ control.logIn = async (req, res) => {
         });
         if (!newUser) throw new Error('Server error');
 
-        return res.status(201).json({ message: 'login Successful' })
+        return res.status(201).json({ message: 'signin Successful' })
     }
     catch (err) {
         return res.status(400).json({ message: err.message })
     }
 }
 
-control.signin = async (req, res) => {
+control.logIn = async (req, res) => {
     try {
         // if(req.session.data) return res.redirect('/chats');
-        console.log('signin: ', req.body);
+        console.log('Log In: ', req.body);
         const { username, password } = req.body;
         if (!username || !password) return res.status(400).send('All fields are required');
 

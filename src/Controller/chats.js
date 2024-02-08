@@ -11,13 +11,10 @@ const errors = {
 }
 
 control.getChats = async (req, res) => {
-    // console.log('----------------------------------------------------');
-    // console.log('sesion: ', req.session.data);
-    // res.json({ message: 'Get Chats Successful' });
 
     try {
         const allChats = await Chat.find();
-        if (allChats.length === 0) throw new Error('No chats found');
+        if (allChats.length === 0) return res.status(201).json({message: 'No chats found'});
 
         console.log(allChats)
         return res.status(200).json({ message: 'Get Chats Successful', allChats: allChats });

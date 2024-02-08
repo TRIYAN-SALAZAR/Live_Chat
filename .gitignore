@@ -4,6 +4,8 @@
 
 # Ignorar archivos temporales
 *.tmp
+*.log
+*.lock
 *.html
 
 # Ignorar archivos de configuración sensibles
