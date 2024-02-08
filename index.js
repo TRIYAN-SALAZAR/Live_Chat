@@ -56,6 +56,11 @@ app.use('/signin', Signin);
 app.use('/profile', Profile);
 app.use('/chats', Chats);
 
+app.get('/test-experiments', (req, res) => {
+    console.log(req.cookies);
+    res.json({ cookies: req.cookies });
+})
+
 app.listen(app.get('port'), () => {
     console.log('listening on port: ' + app.get('port'));
 });

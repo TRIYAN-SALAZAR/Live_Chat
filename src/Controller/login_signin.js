@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const User = require('../Schemas/user');
 const idgenerate = require('../Services/idGenerate');
 
+const error = require('../../errorsMessage');
+
 const control = {}
 
 control.signIn = async (req, res) => {
@@ -13,10 +15,10 @@ control.signIn = async (req, res) => {
             first_name,
             last_name
         } = req.body;
-        if (!username || !password || !first_name || !last_name) throw new Error('All fields are required');
+        if (!username || !password || !first_name || !last_name) throw new Error(error.allFields);
 
         const usenamerExists = await User.findOne({ where: { username: username } });
-        if (usenamerExists) throw new Error('Username is already in use');
+        if (usenamerExists) throw new Error(error.usernameExists);
 
         const id = await idgenerate();
         const passwordHash = await bcrypt.hash(password, 8);
@@ -27,11 +29,13 @@ control.signIn = async (req, res) => {
             first_name: first_name,
             last_name: last_name
         });
-        if (!newUser) throw new Error('Server error');
+        if (!newUser) throw new Error(error.ServerError);
 
         return res.status(201).json({ message: 'signin Successful' })
     }
     catch (err) {
+        if (err.message === error.ServerError) return res.status(500).json({ message: error.ServerError });
+        if (err.name === error.conectToDB) return res.status(500).json({ message: error.ServerError });
         return res.status(400).json({ message: err.message })
     }
 }
@@ -60,8 +64,8 @@ control.logIn = async (req, res) => {
             };
 
             req.session.save(function (err) {
-                if(err) next(err);
-        
+                if (err) next(err);
+
                 console.log('----------------------------------------------------')
                 console.log('sessionID: ', req.sessionID);
                 console.log('session: ', req.session);
@@ -70,7 +74,7 @@ control.logIn = async (req, res) => {
                 return res.redirect('/chats');
             });
         });
-    }catch (err) {
+    } catch (err) {
         return res.status(400).send(err)
     }
 }
