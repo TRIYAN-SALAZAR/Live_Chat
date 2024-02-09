@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const User = require('../Schemas/user');
 const idgenerate = require('../Services/idGenerate');
 
-const error = require('../../errorsMessage');
+const error = require('../errorsMessage');
 
 const control = {}
 
@@ -15,7 +15,7 @@ control.signIn = async (req, res) => {
             first_name,
             last_name
         } = req.body;
-        if (!username || !password || !first_name || !last_name) throw new Error(error.allFields);
+        if (!username || !password || !first_name || !last_name) throw new Error(error.require.allFields);
 
         const usenamerExists = await User.findOne({ where: { username: username } });
         if (usenamerExists) throw new Error(error.usernameExists);
@@ -45,7 +45,7 @@ control.logIn = async (req, res) => {
         // if(req.session.data) return res.redirect('/chats');
         console.log('Log In: ', req.body);
         const { username, password } = req.body;
-        if (!username || !password) return res.status(400).send('All fields are required');
+        if (!username || !password) return res.status(400).send(error.require.allFields);
 
         const user = await User.findOne({ where: { username: username } });
         if (!user) return res.status(400).send('User not found');

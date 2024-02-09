@@ -11,7 +11,6 @@ const errors = {
     notCreated: 'Chat not created',
     conectToDB: 'SequelizeConnectionRefusedError',
     ServerError: 'Server error',
-    allFields: 'All fields are required',
     usernameExists: 'Username is already in use',
 }
 
