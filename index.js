@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 
 const morgan = require('morgan');
+const colors = require('colors');
 
 const app = express();
 const server = http.createServer(app);
@@ -19,6 +20,7 @@ const Signin = require('./src/Routes/signIn');
 
 const Profile = require('./src/Routes/profile');
 const Chats = require('./src/Routes/chats');
+const LogOut = require('./src/Routes/logOut');
 
 dotenv.config();
 mongoDB();
@@ -55,6 +57,7 @@ app.use('/login', Login);
 app.use('/signin', Signin);
 app.use('/profile', Profile);
 app.use('/chats', Chats);
+app.use('/logOut', LogOut);
 
 app.get('/test-experiments', (req, res) => {
     console.log(req.cookies);
@@ -62,5 +65,5 @@ app.get('/test-experiments', (req, res) => {
 })
 
 app.listen(app.get('port'), () => {
-    console.log('listening on port: ' + app.get('port'));
+    console.log(colors.cyan('listening on port: ' + app.get('port')));
 });

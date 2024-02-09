@@ -3,7 +3,7 @@ const control = {};
 control.logOut = async (req, res) => {
     try {
         req.session.destroy();
-        return res.redirect('/');
+        return res.redirect('/signin');
     } catch (error) {
         return res.json({ message: error.message });
     }

@@ -16,7 +16,8 @@ control.getChats = async (req, res) => {
         const allChats = await Chat.find();
         if (allChats.length === 0) return res.status(201).json({message: 'No chats found'});
 
-        console.log(allChats)
+        console.log(allChats);    
+
         return res.status(200).json({ message: 'Get Chats Successful', allChats: allChats });
 
     } catch (err) {
