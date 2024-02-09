@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../databases/conectToPostgretSQL');
+const { sequelize } = require('../../databases/conectToPostgretSQL');
 
 const User = sequelize.define('User', {
     id: {

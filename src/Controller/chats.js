@@ -1,6 +1,6 @@
-const Chat = require('../Schemas/chat');
-const Message = require('../Schemas/messages');
-const User = require('../Schemas/user');
+const Chat = require('../Schemas/noSQL/chat');
+const Message = require('../Schemas/noSQL/messages');
+const User = require('../Schemas/SQL/user');
 const control = {};
 
 const errors = {
@@ -13,10 +13,9 @@ const errors = {
 control.getChats = async (req, res) => {
 
     try {
+        const { id } = req.session.data;
         const allChats = await Chat.find();
-        if (allChats.length === 0) return res.status(201).json({message: 'No chats found'});
-
-        console.log(allChats);    
+        if (allChats.length === 0) return res.status(201).json({ message: 'No chats found' });
 
         return res.status(200).json({ message: 'Get Chats Successful', allChats: allChats });
 
@@ -42,18 +41,18 @@ control.connectChat = async (req, res) => {
 control.createChatOrRoom = async (req, res) => {
 
     try {
-        const { participants, isRoom } = req.body;
-        
+        const { participants, isRoom, chatName } = req.body;
+
         if (!participants) throw new Error(errors.require);
         if (participants.length < 2) throw new Error(errors.atLeastTwo);
 
         const messagesCreated = await Message.create({ messages: [] });
         const chatCreated = isRoom !== undefined
-            ? await Chat.create({ participants: participants, isRoom: isRoom, refMessage: messagesCreated._id })
-            : await Chat.create({ participants: participants, refMessage: messagesCreated._id });
+            ? await Chat.create({ participants: participants, isRoom: isRoom, refMessage: messagesCreated._id, chatName: chatName })
+            : await Chat.create({ participants: participants, refMessage: messagesCreated._id, chatName: chatName });
 
         if (!chatCreated) throw new Error(errors.notCreated);
-        return res.status(200).json({ message: 'Chat created'});
+        return res.status(200).json({ message: 'Chat created' });
 
     } catch (error) {
         if (error.message === errors.require || error.message === errors.atLeastTwo) {

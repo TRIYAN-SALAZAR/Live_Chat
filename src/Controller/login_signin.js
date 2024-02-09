@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const User = require('../Schemas/user');
+const User = require('../Schemas/SQL/user');
 const idgenerate = require('../Services/idGenerate');
 
 const error = require('../errorsMessage');
@@ -42,8 +42,6 @@ control.signIn = async (req, res) => {
 
 control.logIn = async (req, res) => {
     try {
-        // if(req.session.data) return res.redirect('/chats');
-        console.log('Log In: ', req.body);
         const { username, password } = req.body;
         if (!username || !password) return res.status(400).send(error.require.allFields);
 
@@ -68,7 +66,7 @@ control.logIn = async (req, res) => {
 
                 console.log('----------------------------------------------------')
                 console.log('sessionID: ', req.sessionID);
-                console.log('session: ', req.session);
+                console.log('session: ', req.session.data);
                 console.log('----------------------------------------------------')
 
                 return res.redirect('/chats');
