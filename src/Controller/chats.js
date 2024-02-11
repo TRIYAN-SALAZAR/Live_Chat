@@ -1,6 +1,7 @@
 const Chat = require('../Schemas/noSQL/chat');
 const Message = require('../Schemas/noSQL/messages');
 const User = require('../Schemas/noSQL/user');
+const existsChat = require('../Services/checkIfChatExist');
 const error = require('../errorsMessage');
 const control = {};
 
@@ -12,12 +13,13 @@ control.getChats = async (req, res) => {
         const referenceChats = await User.find({ userID: id });
 
         const allChats = await Chat.find({ _id: { $in: referenceChats[0].chats } });
-        console.log('aaaaaaaaa',allChats)
+        console.log('aaaaaaaaa', allChats)
         if (allChats.length === 0) return res.status(201).json({ message: error.notFound });
 
         return res.status(200).json({ message: 'Get Chats Successful', allChats: allChats });
 
     } catch (err) {
+        console.log(err);
         return res.json({ message: err.message });
     }
 }
@@ -29,6 +31,10 @@ control.createChatOrRoom = async (req, res) => {
 
         if (!participants) throw new Error(error.require.participants);
         if (participants.length < 2) throw new Error(error.require.atLeastTwo);
+        if (isRoom === undefined || isRoom === false) {
+            const exists = await existsChat(participants);
+            if (exists) return res.status(400).json({ message: error.alreadyExists });
+        }
 
         const messagesCreated = await Message.create({ messages: [] });
         const chatCreated = isRoom !== undefined
@@ -62,5 +68,4 @@ control.connectChat = async (req, res) => {
         return res.json({ message: err.message });
     }
 }
-
 module.exports = control;

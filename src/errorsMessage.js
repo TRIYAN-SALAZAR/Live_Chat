@@ -12,11 +12,19 @@ const errors = {
     notDeleted: 'Chat not deleted',
     notFoundUser: 'User not found',
     notCreated: 'Chat not created',
+
     conectToDB: 'SequelizeConnectionRefusedError',
     ServerError: 'Server error',
     usernameExists: 'Username is already in use',
     usernameNotExists: 'Username not found',
-    wrongPassword: 'Wrong password'
+    wrongPassword: 'Wrong password',
+
+    notFoundMessage: 'Message not found',
+    notUpdatedMessage: 'Message not updated',
+    notDeletedMessage: 'Message not deleted',
+
+    alreadyExists: 'Chat already exists' 
+
 }
 
 module.exports = errors;

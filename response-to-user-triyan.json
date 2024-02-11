@@ -1,0 +1,60 @@
+{
+    "message": "Get Chats Successful",
+    "allChats": [
+        {
+            "_id": "65c82f09e2bfb78b30dad2fd",
+            "isRoom": false,
+            "participants": [
+                {
+                    "username": "gatitaGolosa69",
+                    "userID": "1bd1431940Fj2AjR"
+                },
+                {
+                    "username": "triyan",
+                    "userID": "YSn0018468akMMhb"
+                }
+            ],
+            "refMessage": "65c82f09e2bfb78b30dad2fb",
+            "chatName": "nofurros",
+            "__v": 0
+        },
+        {
+            "_id": "65c84bd1e1a9504714002b45",
+            "isRoom": false,
+            "participants": [
+                {
+                    "username": "amlo_zoofico",
+                    "userID": "dOK6185349Kb6YFx"
+                },
+                {
+                    "username": "triyan",
+                    "userID": "YSn0018468akMMhb"
+                }
+            ],
+            "refMessage": "65c84bd1e1a9504714002b43",
+            "chatName": "juanito",
+            "__v": 0
+        },
+        {
+            "_id": "65c84c31e1a9504714002b4c",
+            "isRoom": true,
+            "participants": [
+                {
+                    "username": "amlo_zoofico",
+                    "userID": "dOK6185349Kb6YFx"
+                },
+                {
+                    "username": "triyan",
+                    "userID": "YSn0018468akMMhb"
+                },
+                {
+                    "username": "gatitaGolosa69",
+                    "userID": "1bd1431940Fj2AjR"
+                }
+            ],
+            "refMessage": "65c84c31e1a9504714002b4a",
+            "chatName": "Los Insanos",
+            "__v": 0
+        }
+    ]
+}
