@@ -8,13 +8,17 @@ control.getChats = async (req, res) => {
 
     try {
         const { id } = req.session.data;
-        const allChats = await Chat.find();
+
+        const referenceChats = await User.find({ userID: id });
+
+        const allChats = await Chat.find({ _id: { $in: referenceChats[0].chats } });
+        console.log('aaaaaaaaa',allChats)
         if (allChats.length === 0) return res.status(201).json({ message: error.notFound });
 
         return res.status(200).json({ message: 'Get Chats Successful', allChats: allChats });
 
     } catch (err) {
-        return res.json({ message: err.message })
+        return res.json({ message: err.message });
     }
 }
 
@@ -30,6 +34,7 @@ control.createChatOrRoom = async (req, res) => {
         const chatCreated = isRoom !== undefined
             ? await Chat.create({ participants: participants, isRoom: isRoom, refMessage: messagesCreated._id, chatName: chatName })
             : await Chat.create({ participants: participants, refMessage: messagesCreated._id, chatName: chatName });
+
         await User.updateOne({ userID: req.session.data.id }, { $push: { chats: chatCreated._id } });
 
         if (!chatCreated) throw new Error(error.notCreated);

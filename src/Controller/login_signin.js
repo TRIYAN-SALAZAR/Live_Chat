@@ -19,7 +19,7 @@ control.signIn = async (req, res) => {
         const usenamerExists = await UserSQL.findOne({ where: { username: username } });
         if (usenamerExists) throw new Error(error.usernameExists);
 
-        const id = await idgenerate();
+        const id = idgenerate();
         const passwordHash = await bcrypt.hash(password, 8);
         const newUser = await UserSQL.create({
             id: id,
@@ -48,7 +48,7 @@ control.logIn = async (req, res) => {
         if (!username || !password) return res.status(400).send(error.require.allFields);
 
         const user = await UserSQL.findOne({ where: { username: username } });
-        if (!user) return res.status(400).send('User not found');
+        if (!user) return res.status(400).send(error.notFoundUser);
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) return res.status(402).json({ message: error.wrongPassword });

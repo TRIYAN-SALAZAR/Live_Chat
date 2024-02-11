@@ -8,6 +8,9 @@ const errors = {
     },
     
     notFound: 'Chat not found',
+    notUpdated: 'Chat not updated',
+    notDeleted: 'Chat not deleted',
+    notFoundUser: 'User not found',
     notCreated: 'Chat not created',
     conectToDB: 'SequelizeConnectionRefusedError',
     ServerError: 'Server error',
