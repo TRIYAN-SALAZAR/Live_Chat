@@ -12,6 +12,8 @@ const errors = {
     conectToDB: 'SequelizeConnectionRefusedError',
     ServerError: 'Server error',
     usernameExists: 'Username is already in use',
+    usernameNotExists: 'Username not found',
+    wrongPassword: 'Wrong password'
 }
 
 module.exports = errors;
