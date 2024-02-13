@@ -6,8 +6,6 @@
 *.tmp
 *.log
 *.lock
-*.html
-data.json
 
 # Ignorar archivos de configuración sensibles
 config.ini
@@ -16,3 +14,6 @@ config.ini
 # Ignorar archivos generados por el sistema operativo
 .DS_Store
 
+# Ignorar archivos locales de prueba
+data.json
+createUser.js

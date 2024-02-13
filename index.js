@@ -35,16 +35,18 @@ app.use((req, res, next) => {
     res.locals.session = req.session;
     next();
 });
-app.use(session({
-    secret: 'keyboard cat123456789',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        secure: false,
-        maxAge: 3600000,
-        httpOnly: true
-    }
-}));
+app.use(
+    session({
+        secret: 'keyboard cat123456789',
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            secure: false,
+            maxAge: 9630000,
+            httpOnly: true
+        }
+    })
+);
 
 app.set('port', process.env.PORT || 3000);
 

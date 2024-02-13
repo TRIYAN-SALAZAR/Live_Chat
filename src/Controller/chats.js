@@ -3,24 +3,21 @@ const Message = require('../Schemas/noSQL/messages');
 const User = require('../Schemas/noSQL/user');
 const existsChat = require('../Services/checkIfChatExist');
 const error = require('../errorsMessage');
+const errorByUser = require('../Services/errorByUser');
 const control = {};
 
 control.getChats = async (req, res) => {
 
     try {
         const { id } = req.session.data;
-
         const referenceChats = await User.find({ userID: id });
-
         const allChats = await Chat.find({ _id: { $in: referenceChats[0].chats } });
-        console.log('aaaaaaaaa', allChats)
         if (allChats.length === 0) return res.status(201).json({ message: error.notFound });
 
         return res.status(200).json({ message: 'Get Chats Successful', allChats: allChats });
 
     } catch (err) {
-        console.log(err);
-        return res.json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 }
 
@@ -29,11 +26,11 @@ control.createChatOrRoom = async (req, res) => {
     try {
         const { participants, isRoom, chatName } = req.body;
 
-        if (!participants) throw new Error(error.require.participants);
-        if (participants.length < 2) throw new Error(error.require.atLeastTwo);
+        if (!participants) errorByUser(res, {err: error.require.participants});
+        if (participants.length < 2) errorByUser(res, {err: error.require.atLeastTwo});
         if (isRoom === undefined || isRoom === false) {
             const exists = await existsChat(participants);
-            if (exists) return res.status(400).json({ message: error.alreadyExists });
+            if (exists) errorByUser({ err: error.alreadyExists });
         }
 
         const messagesCreated = await Message.create({ messages: [] });
@@ -48,9 +45,6 @@ control.createChatOrRoom = async (req, res) => {
         return res.status(200).json({ message: 'Chat created' });
 
     } catch (err) {
-        if (err.message === error.require.participants || err.message === error.require.atLeastTwo) {
-            return res.status(400).json({ message: err.message });
-        }
         return res.status(500).json({ message: err.message });
     }
 }
@@ -60,12 +54,12 @@ control.connectChat = async (req, res) => {
         const { id } = req.params;
         const chat = await Chat.findOne({ _id: id });
 
-        if (!chat) throw new Error(error.notFound);
+        if (!chat) errorByUser(res, {err: error.notFound});
         else {
             return res.status(200).json({ message: 'Chat found', chat: chat });
         }
     } catch (err) {
-        return res.json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 }
 module.exports = control;

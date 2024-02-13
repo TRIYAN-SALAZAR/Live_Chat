@@ -3,6 +3,7 @@ const UserNoSQL = require('../Schemas/noSQL/user');
 const UserSQL = require('../Schemas/SQL/user');
 const idgenerate = require('../Services/idGenerate');
 const error = require('../errorsMessage');
+const errorByUser = require('../Services/errorByUser');
 
 const control = {}
 
@@ -14,10 +15,10 @@ control.signIn = async (req, res) => {
             first_name,
             last_name
         } = req.body;
-        if (!username || !password || !first_name || !last_name) throw new Error(error.require.allFields);
+        if (!username || !password || !first_name || !last_name) errorByUser(res, {err: error.require.allFields});
 
         const usenamerExists = await UserSQL.findOne({ where: { username: username } });
-        if (usenamerExists) throw new Error(error.usernameExists);
+        if (usenamerExists) errorByUser(res, {err: error.usernameExists});
 
         const id = idgenerate();
         const passwordHash = await bcrypt.hash(password, 8);
@@ -36,22 +37,20 @@ control.signIn = async (req, res) => {
         return res.status(201).json({ message: 'signin Successful' })
     }
     catch (err) {
-        if (err.message === error.ServerError) return res.status(500).json({ message: error.ServerError });
-        if (err.name === error.conectToDB) return res.status(500).json({ message: error.ServerError });
-        return res.status(400).json({ message: err.message })
+        return res.status(500).json({ message: err.message })
     }
 }
 
 control.logIn = async (req, res) => {
     try {
         const { username, password } = req.body;
-        if (!username || !password) return res.status(400).send(error.require.allFields);
+        if (!username || !password) errorByUser(res, {err: error.require.allFields});
 
         const user = await UserSQL.findOne({ where: { username: username } });
-        if (!user) return res.status(400).send(error.notFoundUser);
+        if (!user) errorByUser(res, {err: error.notFoundUser});
 
         const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) return res.status(402).json({ message: error.wrongPassword });
+        if (!passwordMatch) errorByUser(res, { err: error.wrongPassword });
 
         req.session.regenerate(function (err) {
             if (err) next(err);

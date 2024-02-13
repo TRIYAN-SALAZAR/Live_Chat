@@ -1,4 +1,4 @@
-const User = require('../Schemas/SQL/user');
+const error = require('../errorsMessage');
 
 async function isAuthenticated(req, res, next) {
     try {
@@ -7,15 +7,15 @@ async function isAuthenticated(req, res, next) {
             console.log('paso por aqui: ', req.session.data.id, '||', req.session.data.username);
             next();
         }
-        else {
-            return res.status(400).json({
-                message: 'Unauthorized please sign in or Log In',
+    } catch (err) {
+        if (err.message === error.cannotReadID) {
+            return res.status(401).json({
+                message: error.notAuthenticated
             });
         }
-    } catch (error) {
-        return res.status(400 || 500).json({
-            message: 'Unauthorized please sign in or Log In',
-            error: error
+        return res.status(500).json({
+            message: err.message,
+            error: error.ServerError
         });
     }
 }

@@ -23,7 +23,9 @@ const errors = {
     notUpdatedMessage: 'Message not updated',
     notDeletedMessage: 'Message not deleted',
 
-    alreadyExists: 'Chat already exists' 
+    alreadyExists: 'Chat already exists',
+    notAuthenticated: 'Unauthorized please sign in or Log In',
+    cannotReadID: `Cannot read properties of undefined (reading 'id')`
 
 }
 
