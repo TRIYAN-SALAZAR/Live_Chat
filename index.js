@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const http = require('http');
-const socketIO = require('socket.io');
+const { Server } = require('socket.io');
 const cors = require('cors');
 const mongoDB = require('./src/databases/conectToMongoDB');
 const dotenv = require('dotenv');
@@ -12,8 +12,8 @@ const morgan = require('morgan');
 const colors = require('colors');
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
+const httpServer = http.createServer(app);
+const server = new Server(httpServer);
 
 const Login = require('./src/Routes/logIn');
 const Signin = require('./src/Routes/signIn');
@@ -66,6 +66,6 @@ app.get('/test-experiments', (req, res) => {
     res.json({ cookies: req.cookies });
 })
 
-app.listen(app.get('port'), () => {
+httpServer.listen(app.get('port'), () => {
     console.log(colors.cyan('listening on port: ' + app.get('port')));
 });
