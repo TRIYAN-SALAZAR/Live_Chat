@@ -51,13 +51,15 @@ control.createChatOrRoom = async (req, res) => {
 
 control.connectChat = async (req, res) => {
     try {
-        const { id } = req.params;
-        const chat = await Chat.findOne({ _id: id });
+        // const { id } = req.params;
+        // const chat = await Chat.findOne({ _id: id });
 
-        if (!chat) errorByUser(res, {err: error.notFound});
-        else {
-            return res.status(200).json({ message: 'Chat found', chat: chat });
-        }
+        // if (!chat) errorByUser(res, {err: error.notFound});
+        // else {
+        //     return res.status(200).json({ message: 'Chat found', chat: chat });
+        // }
+
+        return res.redirect('ws://localhost:3000');
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
