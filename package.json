@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon node ./src/index.js",
+    "bugs": "node --trace-warnings ./src/index.js",
     "start": "node ./src/index.js"
   },
   "author": "triyan-salazar",

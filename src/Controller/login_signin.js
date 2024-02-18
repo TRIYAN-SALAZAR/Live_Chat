@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const UserNoSQL = require('../Schemas/noSQL/user');
 const UserSQL = require('../Schemas/SQL/user');
 const idgenerate = require('../Services/idGenerate');
-const error = require('../errorsMessage');
+const error = require('../messagesWarnings/errorsMessage');
 const errorByUser = require('../Services/errorByUser');
 const colors = require('colors');
 const control = {}
@@ -51,7 +51,6 @@ control.logIn = async (req, res) => {
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) errorByUser(res, { err: error.wrongPassword });
-        console.log('sessionID: ', req.sessionID);
 
         req.session.regenerate(function (err) {
             if (err) next(err);
@@ -62,14 +61,13 @@ control.logIn = async (req, res) => {
                 first_name: user.first_name,
                 last_name: user.last_name
             };
-            
             req.session.save(function (err) {
                 if (err) next(err);
 
                 console.log('----------------------------------------------------')
                 console.log('sessionID: ', colors.green(req.sessionID));
-                console.log('session: ', req.session);
-                console.log('----------------------------------------------------')
+                // console.log('session: ', req.session);
+                // console.log('----------------------------------------------------')
 
                 return res.redirect('/chats');
             });

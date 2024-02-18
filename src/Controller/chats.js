@@ -2,7 +2,7 @@ const Chat = require('../Schemas/noSQL/chat');
 const Message = require('../Schemas/noSQL/messages');
 const User = require('../Schemas/noSQL/user');
 const existsChat = require('../Services/checkIfChatExist');
-const error = require('../errorsMessage');
+const error = require('../messagesWarnings/errorsMessage');
 const errorByUser = require('../Services/errorByUser');
 const control = {};
 
