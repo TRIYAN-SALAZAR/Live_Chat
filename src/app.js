@@ -1,3 +1,4 @@
+const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
@@ -38,6 +39,7 @@ app.use(cors());
 app.use(cookieParser());
 app.use(sessionMiddleware);
 app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.set('port', process.env.PORT || 3000);
 
@@ -47,9 +49,14 @@ const LogOut = require('./Routes/logOut');
 const Profile = require('./Routes/profile');
 const Chats = require('./Routes/chats');
 
+app.get('/login', express.static(path.join('../public/login.html')));
+app.get('/signin', express.static(path.join('../public/signin.html')));
+
 app.use('/signin', SignIn);
 app.use('/login', Login);
 app.use(setAppSession);
+
+
 app.use('/chats', Chats);
 app.use('/profile', Profile);
 app.use('/logout', LogOut);
@@ -72,7 +79,7 @@ io.use((socket, next) => {
 })
 
 io.on('connection', socket => {
-
+    
     socket.on('moddify-session', () => {
         const dataStoreString = socket.request.sessionStore.sessions;
         const dataStore = JSON.parse(dataStoreString[app.get('configSessionID')]);
