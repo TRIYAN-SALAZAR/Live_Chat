@@ -16,11 +16,20 @@ const sessionMiddleware = session({
     resave: true,
     saveUninitialized: true,
     cookie: {
+        name: 'io',
+        path: '/',
         signed: true,
-        path: '/'
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60
     }
 });
 
+function setAppSession (req, res, next) {
+    app.set('configSession', req.session);
+    app.set('configSessionID', req.sessionID);
+
+    next();
+}
 
 dotenv.config();
 
@@ -40,10 +49,7 @@ const Chats = require('./Routes/chats');
 
 app.use('/signin', SignIn);
 app.use('/login', Login);
-app.use((req, res, next) => {
-    app.set('session', req.session);
-    next();
-});
+app.use(setAppSession);
 app.use('/chats', Chats);
 app.use('/profile', Profile);
 app.use('/logout', LogOut);
@@ -56,31 +62,31 @@ io.engine.use(cors());
 io.engine.use(morgan('dev'));
 
 io.use((socket, next) => {
-    const data = app.get('session');
-    if(data) {
-        socket.request.session = data;
-        socket.request.session.save(err => {
-            if(err) return next(err);
-        });
-        socket.data = data;
-        next();
-    } else {
-        next(new Error('not authenticated'));
+    const sessionExist = socket.request.sessionStore.sessions;
+    
+    if(Object.keys(sessionExist).length === 0) {
+        return next(new Error('Sessions not found'));
     }
-});
 
-io.on('conection-error', (err) => {
-    console.log(err);
+    next();
 })
 
 io.on('connection', socket => {
-    const req = socket.request;
+
     socket.on('moddify-session', () => {
-        console.log(colors.red('----------------------------------------------------'));
-        console.log('sessionID: ', colors.green(req.sessionID));
-        console.log('session: ', req.session);
-        console.log(colors.red('----------------------------------------------------'));
+        const dataStoreString = socket.request.sessionStore.sessions;
+        const dataStore = JSON.parse(dataStoreString[app.get('configSessionID')]);
+    });
+
+    socket.on('error', (err) => {
+        console.log(err);
+        socket.disconnect();
     });
 });
 
+io.on('error', (err) => {
+    console.log(err);
+});
+
 module.exports = { app, httpServer, io };
+
