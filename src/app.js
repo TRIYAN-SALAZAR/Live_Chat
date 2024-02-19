@@ -27,13 +27,6 @@ const sessionMiddleware = session({
     }
 });
 
-function setAppSession (req, res, next) {
-    app.set('configSession', req.session);
-    app.set('configSessionID', req.sessionID);
-    
-    next();
-}
-
 dotenv.config();
 
 app.use(express.json());
@@ -62,31 +55,24 @@ app.use('/chats', Chats);
 app.use('/profile', Profile);
 app.use('/logout', LogOut);
 
-io.use((socket, next) => {
+const modeDev = require('./Socket_Controller/dev');
+const chats = require('./Socket_Controller/chats');
+
+const connectModeDev = (socket) => modeDev(socket, app);
+const socketChat = (socket) => chats(socket, app);
+
+const regexpChat = /\/chat\/[a-zA-Z0-9]+/;
+
+io.of(regexpChat).use((socket, next) => {
     const sessionExist = app.get('configSession');
     if(sessionExist === undefined) {
         return next(new Error('Session not found'));
     }
     next();
-})
+});
 
-io.on('connect', (socket) => {
-    console.log(colors.cyan('User connected'));
+io.of('/dev').on('connect', connectModeDev);
+io.of(regexpChat).on('connect', socketChat);
 
-    socket.use((___, next) => {
-        socket.data = app.get('configSession').data;
-        next();
-    })
-
-    socket.on('show-data', () => {
-        console.log(socket.data);
-        socket.emit('show-data', socket.data);
-    })
-
-    socket.on('disconnect', () => {
-        console.log(colors.cyan('User disconnected'));
-    })
-})
-
-module.exports = { app, httpServer, io };
+module.exports = { app, httpServer};
 

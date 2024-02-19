@@ -1,4 +1,4 @@
-const { app, httpServer, io } = require('./app');
+const { app, httpServer } = require('./app');
 const mongodb = require('./databases/conectToMongoDB');
 const colors = require('colors');
 
