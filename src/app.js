@@ -11,6 +11,8 @@ const session = require('express-session');
 
 const app = express();
 const httpServer = createServer(app);
+const io = new Server(httpServer);
+
 
 const sessionMiddleware = session({
     secret: 'catsarecool',
@@ -28,7 +30,7 @@ const sessionMiddleware = session({
 function setAppSession (req, res, next) {
     app.set('configSession', req.session);
     app.set('configSessionID', req.sessionID);
-
+    
     next();
 }
 
@@ -39,9 +41,14 @@ app.use(cors());
 app.use(cookieParser());
 app.use(sessionMiddleware);
 app.use(morgan('dev'));
-app.use(express.static(path.join(__dirname, '../public')));
+
+io.engine.use(sessionMiddleware);
+io.engine.use(cookieParser());
+io.engine.use(cors());
+io.engine.use(morgan('dev'));
 
 app.set('port', process.env.PORT || 3000);
+app.set('io', io);
 
 const Login = require('./Routes/logIn');
 const SignIn = require('./Routes/signIn');
@@ -49,51 +56,37 @@ const LogOut = require('./Routes/logOut');
 const Profile = require('./Routes/profile');
 const Chats = require('./Routes/chats');
 
-app.get('/login', express.static(path.join('../public/login.html')));
-app.get('/signin', express.static(path.join('../public/signin.html')));
-
 app.use('/signin', SignIn);
 app.use('/login', Login);
-app.use(setAppSession);
-
-
 app.use('/chats', Chats);
 app.use('/profile', Profile);
 app.use('/logout', LogOut);
 
-const io = new Server(httpServer);
-
-io.engine.use(sessionMiddleware);
-io.engine.use(cookieParser());
-io.engine.use(cors());
-io.engine.use(morgan('dev'));
-
 io.use((socket, next) => {
-    const sessionExist = socket.request.sessionStore.sessions;
-    
-    if(Object.keys(sessionExist).length === 0) {
-        return next(new Error('Sessions not found'));
+    const sessionExist = app.get('configSession');
+    if(sessionExist === undefined) {
+        return next(new Error('Session not found'));
     }
-
     next();
 })
 
-io.on('connection', socket => {
-    
-    socket.on('moddify-session', () => {
-        const dataStoreString = socket.request.sessionStore.sessions;
-        const dataStore = JSON.parse(dataStoreString[app.get('configSessionID')]);
-    });
+io.on('connect', (socket) => {
+    console.log(colors.cyan('User connected'));
 
-    socket.on('error', (err) => {
-        console.log(err);
-        socket.disconnect();
-    });
-});
+    socket.use((___, next) => {
+        socket.data = app.get('configSession').data;
+        next();
+    })
 
-io.on('error', (err) => {
-    console.log(err);
-});
+    socket.on('show-data', () => {
+        console.log(socket.data);
+        socket.emit('show-data', socket.data);
+    })
+
+    socket.on('disconnect', () => {
+        console.log(colors.cyan('User disconnected'));
+    })
+})
 
 module.exports = { app, httpServer, io };
 

@@ -61,14 +61,12 @@ control.logIn = async (req, res) => {
                 first_name: user.first_name,
                 last_name: user.last_name
             };
+            
+            req.app.set('configSessionID', req.sessionID);
+            req.app.set('configSession', req.session);
+
             req.session.save(function (err) {
                 if (err) next(err);
-
-                console.log('----------------------------------------------------')
-                console.log('sessionID: ', colors.green(req.sessionID));
-                // console.log('session: ', req.session);
-                // console.log('----------------------------------------------------')
-
                 return res.redirect('/chats');
             });
         });
