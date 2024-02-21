@@ -51,7 +51,7 @@ control.logIn = async (req, res) => {
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) errorByUser(res, { err: error.wrongPassword });
-
+        console.log(colors.red(req.sessionID));
         req.session.regenerate(function (err) {
             if (err) next(err);
 
@@ -62,8 +62,11 @@ control.logIn = async (req, res) => {
                 last_name: user.last_name
             };
             
-            req.app.set('configSessionID', req.sessionID);
-            req.app.set('configSession', req.session);
+            const io = req.app.get('io');
+            io.of('dev').use((socket, next) => {
+                socket.data = req.session.data;
+                next();
+            });
 
             req.session.save(function (err) {
                 if (err) next(err);
