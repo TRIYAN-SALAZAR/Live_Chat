@@ -6,7 +6,13 @@ function socketDev(socket, app) {
 
     socket.on('show-data', () => {
         console.log(socket.request.session);
-        console.log(socket.data)
+        console.log(socket.request.sessionID);
+        console.log(socket.data);
+    });
+
+    socket.on('session', async(data) => {
+        const SESSION = await isValidSession(data);
+        socket.emit('message', SESSION);
     });
     
     socket.on('disconnect', () => {

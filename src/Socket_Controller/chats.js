@@ -1,6 +1,6 @@
 const colors = require('colors');
 
-async function connectChat(socket) {
+function connectChat(socket) {
     console.log(colors.cyan('User connected to chat'));
 
     socket.on('message', (message) => {

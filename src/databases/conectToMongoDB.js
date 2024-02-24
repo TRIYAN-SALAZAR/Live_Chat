@@ -12,7 +12,7 @@ async function connectToDatabase() {
         } = process.env;
 
         console.log(colors.yellow('Estableciendo conexion a la base de datos'));
-        const connect = await mongoose.connect('mongodb://localhost:27017/' + DATABASE_MONGO);
+        const connect = await mongoose.connect('mongodb://localhost:27017/' + 'chats-messages');
 
         if (!connect) {
             throw new Error('No se pudo conectar a la base de datos');

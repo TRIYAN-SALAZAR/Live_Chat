@@ -1,4 +1,4 @@
-const error = require('../messagesWarnings/errorsMessage');
+const error = require('../../messagesWarnings/errorsMessage');
 
 async function isAuthenticated(req, res, next) {
     try {

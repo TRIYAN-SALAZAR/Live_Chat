@@ -14,10 +14,10 @@ control.getChats = async (req, res) => {
         const allChats = await Chat.find({ _id: { $in: referenceChats[0].chats } });
         if (allChats.length === 0) return res.status(201).json({ message: error.notFound });
 
-        return res.status(200).json({ message: 'Get Chats Successful', allChats: allChats });
+        res.status(200).json({ message: 'Get Chats Successful', allChats: allChats });
 
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 }
 
@@ -42,10 +42,10 @@ control.createChatOrRoom = async (req, res) => {
 
         if (!chatCreated) throw new Error(error.notCreated);
 
-        return res.status(200).json({ message: 'Chat created' });
+        res.status(200).json({ message: 'Chat created' });
 
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 }
 
@@ -59,9 +59,9 @@ control.connectChat = async (req, res) => {
         //     return res.status(200).json({ message: 'Chat found', chat: chat });
         // }
 
-        return res.redirect('ws://localhost:3000');
+        res.redirect('ws://localhost:3000');
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 }
 module.exports = control;
