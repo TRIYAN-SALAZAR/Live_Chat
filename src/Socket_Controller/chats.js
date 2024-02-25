@@ -1,15 +1,19 @@
 const colors = require('colors');
 
-function connectChat(socket) {
-    console.log(colors.cyan('User connected'));
+function chats(socket, appWS) {
+    const chat = socket.handshake.query.chat;
 
     socket.on('message', (...data) => {
-        socket.broadcast.emit('message', data[0]);
+            socket.broadcast.to(chat).emit('message', data);
+    });
+
+    socket.on('all-info-client', (data) => {
+        console.log(socket.rooms);
     });
 
     socket.on('disconnect', () => {
         console.log(colors.red('User disconnected'));
-    });   
+    });
 }
 
-module.exports = connectChat;
+module.exports = chats;

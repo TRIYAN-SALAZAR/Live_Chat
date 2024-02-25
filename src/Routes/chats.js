@@ -9,6 +9,5 @@ router.route('/')
 
 router.route('/:id')
     .post(isAuthenticated, createChatOrRoom)
-    .get(isAuthenticated, connectChat)
 
 module.exports = router;

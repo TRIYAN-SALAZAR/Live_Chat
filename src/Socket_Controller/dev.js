@@ -1,13 +1,11 @@
 const colors = require('colors');
 const { parse } = require('cookie');
 
-function socketDev(socket, app) {
+function socketDev(socket, appWS, app) {
     console.log(colors.cyan('User Dev connected'));
 
     socket.on('show-data', () => {
-        console.log(socket.request.session);
-        console.log(socket.request.sessionID);
-        console.log(socket.data);
+        console.log(appWS.engine);
     });
 
     socket.on('session', async(data) => {
