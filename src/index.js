@@ -1,4 +1,4 @@
-const { app, httpServer } = require('./app');
+const { app, httpServer, appWS } = require('./app');
 const mongodb = require('./databases/conectToMongoDB');
 const colors = require('colors');
 
@@ -11,6 +11,7 @@ function startServer() {
     httpServer.listen(app.get('port'), () => {
         console.log(colors.cyan(`Server running on port ${app.get('port')}`));
     });
+
 }
 
 startServer();

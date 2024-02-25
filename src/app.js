@@ -1,4 +1,3 @@
-const path = require('path');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
@@ -53,34 +52,33 @@ const LogOut = require('./Routes/logOut');
 const Profile = require('./Routes/profile');
 const Chats = require('./Routes/chats');
 
+
 app.use('/signin', SignIn);
 app.use('/login', Login);
 app.use('/chats', Chats);
 app.use('/profile', Profile);
 app.use('/logout', LogOut);
 
+
 const isValidAuth = require('./middlewares/socket.io/isValidAuth');
 
 appWS.engine.use(morgan('dev'));
+appWS.engine.use(cors());
 appWS.engine.use(sessionMiddlewareDev);
 
-appWS.of('/dev').use(isValidAuth);
-appWS.of('/chat').use((___, next) => {
-    next();
-});
-
-appWS.of('/dev').use((socket, next) => {
-    console.log(socket.handshake.headers);
-    next();
-});
 
 const modeDev = require('./Socket_Controller/dev');
-const chats = require('./Socket_Controller/chats');
+const chat = require('./Socket_Controller/chats');
 
 const connectModeDev = (socket) => modeDev(socket);
-const socketChat = (socket) => chats(socket);
+const socketChat = (socket) => chat(socket);
+
+appWS.of('/dev').use(isValidAuth);
+appWS.of('/chat').use(isValidAuth);
 
 appWS.of('/chat').on('connect', socketChat);
 appWS.of('/dev').on('connect', connectModeDev);
 
-module.exports = { app, httpServer };
+appWS.emit('message', 'Hello user from Socket.io');
+
+module.exports = { app, httpServer, appWS };

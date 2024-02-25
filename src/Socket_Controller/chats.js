@@ -1,19 +1,15 @@
 const colors = require('colors');
 
 function connectChat(socket) {
-    console.log(colors.cyan('User connected to chat'));
+    console.log(colors.cyan('User connected'));
 
-    socket.on('message', (message) => {
-        socket.emit('message', 'Hello user from Socket.io');
+    socket.on('message', (...data) => {
+        socket.broadcast.emit('message', data[0]);
     });
 
-    socket.on('all-info-client', () => {
-        console.log(socket.data);
-        console.log(socket.request.sessionID);
-        console.log(socket.request.session);
-        console.log(`The socket handShake: `, socket.handshake);
-        
-    })
+    socket.on('disconnect', () => {
+        console.log(colors.red('User disconnected'));
+    });   
 }
 
 module.exports = connectChat;
