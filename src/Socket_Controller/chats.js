@@ -1,10 +1,15 @@
-const colors = require('colors');
-
+const Chats = require('../Schemas/noSQL/chat');
+const Messages = require('../Schemas/noSQL/messages');
 function chats(socket, appWS) {
     const chat = socket.handshake.query.chat;
 
-    socket.on('message', (...data) => {
-            socket.broadcast.to(chat).emit('message', data);
+    socket.on('message', async (data) => {
+        if (chat) {
+            const referenceChat = await Chats.findOne({ _id: chat });
+            await Messages.updateOne({ _id: referenceChat.refMessage }, { $push: { messages: data } });
+        }
+
+        socket.broadcast.to(chat).emit('message', data);
     });
 
     socket.on('all-info-client', (data) => {

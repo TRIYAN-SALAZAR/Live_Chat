@@ -92,4 +92,4 @@ appWS.of('/dev').on('connect', connectModeDev);
 
 appWS.emit('message', 'Hello user from Socket.io');
 
-module.exports = { app, httpServer, appWS };
+module.exports = { app, httpServer };

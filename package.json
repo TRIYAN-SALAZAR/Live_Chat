@@ -1,7 +1,7 @@
 {
-  "name": "real-time-chat",
-  "version": "0.0.1",
-  "description": "Is a server for an application real-time chat",
+  "name": "chat-app-server",
+  "version": "Alpha 1.0.0",
+  "description": "Is a server for an application chat app using socket.io and others tecnologies",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
