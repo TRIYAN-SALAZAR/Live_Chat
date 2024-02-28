@@ -3,8 +3,6 @@ const UserNoSQL = require('../Schemas/noSQL/user');
 const UserSQL = require('../Schemas/SQL/user');
 const idgenerate = require('../Services/idGenerate');
 const error = require('../messagesWarnings/errorsMessage');
-const errorByUser = require('../Services/errorByUser');
-const colors = require('colors');
 const control = {}
 
 control.signIn = async (req, res) => {
@@ -16,7 +14,7 @@ control.signIn = async (req, res) => {
             last_name
         } = req.body;
         if (!username || !password || !first_name || !last_name) return res.status(400).json({ermessager: error.require.allFields});
-        console.log(username, password, first_name, last_name);
+
         const usenamerExists = await UserSQL.findOne({ where: { username: username } });
         if (usenamerExists) return res.status(409).json({ message: error.usernameExists });
 

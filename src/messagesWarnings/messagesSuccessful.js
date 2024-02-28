@@ -1,6 +1,5 @@
 const success = {
     message: {
-        created: 'Message created successfully',
         updated: 'Message updated successfully',
         deleted: 'Message deleted successfully'
     },

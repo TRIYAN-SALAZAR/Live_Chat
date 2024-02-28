@@ -1,4 +1,5 @@
 const error = require('../../messagesWarnings/errorsMessage');
+// futura implementacion de autenciacion formal
 
 async function isAuthenticated(req, res, next) {
     try {

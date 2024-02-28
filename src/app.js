@@ -15,15 +15,15 @@ const httpServer = createServer(app);
 
 const sessionMiddlewareDev = session({
     store: MongoStore.create({
-        mongoUrl: 'mongodb://localhost:27017/',
-        dbName: 'chats-messages',
+        mongoUrl: process.env.URL_MONGODB,
+        dbName: process.env.NAME_MONGODB,
         collectionName: 'sessions'
     }),
-    secret: 'catsarecool',
+    secret: process.env.SECRET_SESSION,
     resave: true,
     saveUninitialized: false,
     cookie: {
-        path: '/',
+        path: '/real-time-chat',
         signed: false,
         httpOnly: false,
         maxAge: 1000 * 60 * 60
@@ -50,20 +50,11 @@ app.use('/chats', Chats);
 app.use('/profile', Profile);
 app.use('/logout', LogOut);
 
-const appWS = new Server(httpServer, {
-    cookie: {
-        path: '/',
-        signed: false,
-        httpOnly: false,
-        maxAge: 1000 * 60 * 60
-    }
-});
+const appWS = new Server(httpServer);
 
 appWS.engine.use(morgan('dev'));
 appWS.engine.use(sessionMiddlewareDev);
 appWS.engine.use(cors());
-
-const isValidAuth = require('./middlewares/socket.io/isValidAuth');
 
 const modeDev = require('./Socket_Controller/dev');
 const chat = require('./Socket_Controller/chats');
@@ -71,20 +62,10 @@ const chat = require('./Socket_Controller/chats');
 const connectModeDev = (socket) => modeDev(socket, appWS, app);
 const socketChats = (socket) => chat(socket, appWS);
 
-// appWS.of('/dev').use(isValidAuth);
+
+const isValidAuth = require('./middlewares/socket.io/isValidAuth');
+
 appWS.of('/chat').use(isValidAuth);
-
-appWS.of('/chat').use((socket, next) => {
-    const chat = socket.handshake.query.chat;
-
-    if (chat !== undefined) {
-        socket.join(chat);
-        next();
-    }
-    else {
-        next();
-    }
-});
 
 appWS.of('/chat').on('connect', socketChats);
 appWS.of('/dev').on('connect', connectModeDev);

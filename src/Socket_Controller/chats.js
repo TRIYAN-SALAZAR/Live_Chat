@@ -2,7 +2,8 @@ const Chats = require('../Schemas/noSQL/chat');
 const Messages = require('../Schemas/noSQL/messages');
 function chats(socket, appWS) {
     const chat = socket.handshake.query.chat;
-
+    if(chat) socket.join(chat);
+    
     socket.on('message', async (data) => {
         if (chat) {
             const referenceChat = await Chats.findOne({ _id: chat });

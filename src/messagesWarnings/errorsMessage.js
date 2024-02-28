@@ -19,7 +19,6 @@ const errors = {
     usernameNotExists: 'Username not found',
     wrongPassword: 'Wrong password',
 
-    notFoundMessage: 'Message not found',
     notUpdatedMessage: 'Message not updated',
     notDeletedMessage: 'Message not deleted',
 
