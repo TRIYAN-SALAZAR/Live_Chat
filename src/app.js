@@ -1,7 +1,6 @@
 const cors = require('cors');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
-const colors = require('colors');
 const express = require('express');
 const MongoStore = require('connect-mongo');
 const { createServer } = require('http');
@@ -38,8 +37,8 @@ app.use(morgan('dev'));
 
 app.set('port', process.env.PORT || 3000);
 
-const Login = require('./Routes/logIn');
 const SignIn = require('./Routes/signIn');
+const Login = require('./Routes/logIn');
 const LogOut = require('./Routes/logOut');
 const Profile = require('./Routes/profile');
 const Chats = require('./Routes/chats');
@@ -60,11 +59,11 @@ const appWS = new Server(httpServer, {
     }
 });
 
-const isValidAuth = require('./middlewares/socket.io/isValidAuth');
-
 appWS.engine.use(morgan('dev'));
 appWS.engine.use(sessionMiddlewareDev);
 appWS.engine.use(cors());
+
+const isValidAuth = require('./middlewares/socket.io/isValidAuth');
 
 const modeDev = require('./Socket_Controller/dev');
 const chat = require('./Socket_Controller/chats');
@@ -72,7 +71,7 @@ const chat = require('./Socket_Controller/chats');
 const connectModeDev = (socket) => modeDev(socket, appWS, app);
 const socketChats = (socket) => chat(socket, appWS);
 
-appWS.of('/dev').use(isValidAuth);
+// appWS.of('/dev').use(isValidAuth);
 appWS.of('/chat').use(isValidAuth);
 
 appWS.of('/chat').use((socket, next) => {

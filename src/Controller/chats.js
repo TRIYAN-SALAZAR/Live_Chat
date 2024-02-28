@@ -14,10 +14,10 @@ control.getChats = async (req, res) => {
         const allChats = await Chat.find({ _id: { $in: referenceChats[0].chats } });
         if (allChats.length === 0) return res.status(201).json({ message: error.notFound });
 
-        res.status(200).json({ message: 'Get Chats Successful', allChats: allChats });
+        return res.status(200).json({ message: 'Get Chats Successful', allChats: allChats });
 
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 }
 
@@ -26,26 +26,24 @@ control.createChatOrRoom = async (req, res) => {
     try {
         const { participants, isRoom, chatName } = req.body;
 
-        if (!participants) errorByUser(res, {err: error.require.participants});
-        if (participants.length < 2) errorByUser(res, {err: error.require.atLeastTwo});
+        if (participants.length < 2) return res.status(400).json({err: error.require.atLeastTwo});
         if (isRoom === undefined || isRoom === false) {
             const exists = await existsChat(participants);
-            if (exists) errorByUser({ err: error.alreadyExists });
+            if (exists) return res.status(400).json({err: error.alreadyExists });
         }
 
         const messagesCreated = await Message.create({ messages: [] });
-        const chatCreated = isRoom !== undefined
+        const chatCreated = isRoom !== undefined || isRoom === false
             ? await Chat.create({ participants: participants, isRoom: isRoom, refMessage: messagesCreated._id, chatName: chatName })
             : await Chat.create({ participants: participants, refMessage: messagesCreated._id, chatName: chatName });
+        if (!chatCreated) throw new Error(error.notCreated);
 
         await User.updateOne({ userID: req.session.data.id }, { $push: { chats: chatCreated._id } });
 
-        if (!chatCreated) throw new Error(error.notCreated);
-
-        res.status(200).json({ message: 'Chat created' });
+        return res.status(200).json({ message: 'Chat created' });
 
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return res.status(500).json({ message: err.message });
     }
 }
 

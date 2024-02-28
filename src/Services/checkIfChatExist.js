@@ -1,3 +1,5 @@
+const Chat = require('../Schemas/noSQL/chat');
+
 async function existsChat(participants) {
     try {
         const userOne = participants[0];

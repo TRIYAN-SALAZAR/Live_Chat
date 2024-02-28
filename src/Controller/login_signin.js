@@ -15,11 +15,11 @@ control.signIn = async (req, res) => {
             first_name,
             last_name
         } = req.body;
-        if (!username || !password || !first_name || !last_name) errorByUser(res, { err: error.require.allFields });
-        
+        if (!username || !password || !first_name || !last_name) return res.status(400).json({ermessager: error.require.allFields});
+        console.log(username, password, first_name, last_name);
         const usenamerExists = await UserSQL.findOne({ where: { username: username } });
-        if (usenamerExists) errorByUser(res, { err: error.usernameExists });
-        
+        if (usenamerExists) return res.status(409).json({ message: error.usernameExists });
+
         const id = idgenerate();
         const passwordHash = await bcrypt.hash(password, 8);
         const newUser = await UserSQL.create({
@@ -30,10 +30,10 @@ control.signIn = async (req, res) => {
             last_name: last_name
         });
         if (!newUser) throw new Error(error.ServerError);
-        
+
         const newUseDB = await UserNoSQL.create({ userID: id, username: username });
         if (!newUseDB) throw new Error(error.ServerError);
-        
+
         return res.status(201).json({ message: 'signin Successful' })
     }
     catch (err) {
@@ -44,14 +44,14 @@ control.signIn = async (req, res) => {
 control.logIn = async (req, res, next) => {
     try {
         const { username, password } = req.body;
-        if (!username || !password) errorByUser(res, { err: error.require.allFields });
-        
+        if (!username || !password) return res.status(400).json({ err: error.require.allFields });
+
         const user = await UserSQL.findOne({ where: { username: username } });
-        if (!user) errorByUser(res, { err: error.notFoundUser });
+        if (!user) return res.status(404).json({ err: error.notFoundUser });
 
         const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) errorByUser(res, { err: error.wrongPassword });
-        
+        if (!passwordMatch) return res.status(401).json({ err: error.wrongPassword });
+
         req.session.regenerate(function (err) {
             if (err) next(err);
 
@@ -61,9 +61,9 @@ control.logIn = async (req, res, next) => {
                 first_name: user.first_name,
                 last_name: user.last_name
             };
-            
+
             req.session.save(function (err) {
-                res.status(200).json({ message: 'login Successful' });
+                return res.status(200).json({ message: 'login Successful' });
             });
         });
     } catch (err) {
