@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
-
+console.log(process.env.URL_MONGODB);
 const sessionMiddlewareDev = session({
     store: MongoStore.create({
         mongoUrl: process.env.URL_MONGODB,
@@ -23,17 +23,17 @@ const sessionMiddlewareDev = session({
     resave: true,
     saveUninitialized: false,
     cookie: {
-        path: '/real-time-chat',
+        path: '/',
         signed: false,
         httpOnly: false,
         maxAge: 1000 * 60 * 60
     },
 });
 
-app.use(express.json());
 app.use(cors());
-app.use(sessionMiddlewareDev);
+app.use(express.json());
 app.use(morgan('dev'));
+app.use(sessionMiddlewareDev);
 
 app.set('port', process.env.PORT || 3000);
 
@@ -59,7 +59,7 @@ appWS.engine.use(cors());
 const modeDev = require('./Socket_Controller/dev');
 const chat = require('./Socket_Controller/chats');
 
-const connectModeDev = (socket) => modeDev(socket, appWS, app);
+const connectModeDev = (socket) => modeDev(socket);
 const socketChats = (socket) => chat(socket, appWS);
 
 

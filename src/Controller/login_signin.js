@@ -16,7 +16,7 @@ control.signIn = async (req, res) => {
         if (!username || !password || !first_name || !last_name) return res.status(400).json({ermessager: error.require.allFields});
 
         const usenamerExists = await UserSQL.findOne({ where: { username: username } });
-        if (usenamerExists) return res.status(409).json({ message: error.usernameExists });
+        if (usenamerExists) return res.status(400).json({ message: error.usernameExists });
 
         const id = idgenerate();
         const passwordHash = await bcrypt.hash(password, 8);
@@ -49,7 +49,6 @@ control.logIn = async (req, res, next) => {
 
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) return res.status(401).json({ err: error.wrongPassword });
-
         req.session.regenerate(function (err) {
             if (err) next(err);
 
@@ -65,7 +64,7 @@ control.logIn = async (req, res, next) => {
             });
         });
     } catch (err) {
-        return res.status(400).send(err)
+        return res.status(500).json({err: err.message});
     }
 }
 

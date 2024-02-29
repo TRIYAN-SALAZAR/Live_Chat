@@ -7,10 +7,6 @@ mongoose.set('strictQuery', true);
 
 async function connectToDatabase() {
     try {
-        const {
-            DATABASE_MONGO
-        } = process.env;
-
         console.log(colors.yellow('Estableciendo conexion a la base de datos'));
         const connect = await mongoose.connect('mongodb://localhost:27017/' + 'chats-messages');
 
