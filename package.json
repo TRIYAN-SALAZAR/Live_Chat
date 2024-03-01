@@ -1,5 +1,5 @@
 {
-  "name": "chat-app-server",
+  "name": "Live-Chat",
   "version": "Alpha 1.0.0",
   "description": "Is a server for an application chat app using socket.io and others tecnologies",
   "main": "index.js",
