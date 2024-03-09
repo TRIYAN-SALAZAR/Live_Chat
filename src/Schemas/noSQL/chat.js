@@ -1,23 +1,23 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require("mongoose");
 
 const chatSchema = new Schema({
-    isRoom: {
-        type: Boolean,
-        default: false
-    },
-    participants: {
-        type: [Object],
-        require: true
-    },
-    refMessage: {
-        type: Schema.Types.ObjectId,
-        ref: 'Message',
-        require: true
-    },
-    chatName: {
-        type: String,
-        require: true
-    }
+  isRoom: {
+    type: Boolean,
+    default: false,
+  },
+  participants: {
+    type: [Object],
+    require: true,
+  },
+  refMessage: {
+    type: Schema.Types.ObjectId,
+    ref: "Message",
+    require: true,
+  },
+  chatName: {
+    type: String,
+    require: true,
+  },
 });
 
-module.exports = model('Chat', chatSchema);
+module.exports = model("Chat", chatSchema);
