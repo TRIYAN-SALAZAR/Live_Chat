@@ -14,7 +14,7 @@ const errors = {
   notCreated: "Chat not created",
 
   conectToDB: "SequelizeConnectionRefusedError",
-  ServerError: "Server error",
+  ServerError: "Internal Server Error",
   usernameExists: "Username is already in use",
   usernameNotExists: "Username not found",
   wrongPassword: "Wrong password",
@@ -25,6 +25,11 @@ const errors = {
   alreadyExists: "Chat already exists",
   notAuthenticated: "Unauthorized please sign in or Log In",
   cannotReadID: `Cannot read properties of undefined (reading 'id')`,
+  jwt: {
+    invalidToken: "Invalid token",
+    expired: "Token Expired",
+    notFound: "Token not found"
+  }
 };
 
 module.exports = errors;

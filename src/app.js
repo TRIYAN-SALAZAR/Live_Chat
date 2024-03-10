@@ -12,7 +12,6 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
-console.log(process.env.URL_MONGODB);
 const sessionMiddlewareDev = session({
   store: MongoStore.create({
     mongoUrl: process.env.URL_MONGODB,

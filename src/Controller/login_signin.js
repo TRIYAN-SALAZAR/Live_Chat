@@ -63,7 +63,8 @@ control.logIn = async (req, res, next) => {
         if (err) next(err);
 
         const token = generateToken(user.id);
-        return res.status(200).json({ message: "login Successful", token: token });
+
+        return res.status(200).header("Authorization", token).json({ message: "login Successful" })
       });
     });
   } catch (err) {

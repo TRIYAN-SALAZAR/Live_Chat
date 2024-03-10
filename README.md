@@ -7,20 +7,14 @@ el cual tendra multiple funciones como crear chats grupales, bloquear usuarios, 
 
 - postgreSQL
 - MongoDB
-- Postman
+- Postman (Opcional)
 
 ## Run Locally
 
 Clone the project
 
 ```bash
-  git clone https://link-to-project
-```
-
-Go to the project directory
-
-```bash
-  cd real-time-chat
+  git clone https://github.com/TRIYAN-SALAZAR/Live_Chat.git
 ```
 
 Install dependencies
