@@ -3,6 +3,8 @@ const UserNoSQL = require("../Schemas/noSQL/user");
 const UserSQL = require("../Schemas/SQL/user");
 const idgenerate = require("../Services/idGenerate");
 const error = require("../messagesWarnings/errorsMessage");
+const { generateToken } = require("../Services/JWT");
+
 const control = {};
 
 control.signIn = async (req, res) => {
@@ -11,7 +13,7 @@ control.signIn = async (req, res) => {
     if (!username || !password || !first_name || !last_name)
       return res.status(400).json({ ermessager: error.require.allFields });
 
-    const usenamerExists = await UserSQL.findOne({where: { username: username }});
+    const usenamerExists = await UserSQL.findOne({ where: { username: username } });
     if (usenamerExists)
       return res.status(400).json({ message: error.usernameExists });
 
@@ -58,7 +60,10 @@ control.logIn = async (req, res, next) => {
       };
 
       req.session.save(function (err) {
-        return res.status(200).json({ message: "login Successful" });
+        if (err) next(err);
+
+        const token = generateToken(user.id);
+        return res.status(200).json({ message: "login Successful", token: token });
       });
     });
   } catch (err) {
