@@ -2,13 +2,13 @@ module.exports = {
   env: {
     commonjs: true,
     es2021: true,
-    node: true
+    node: true,
   },
   extends: "eslint:recommended",
   overrides: [
     {
       env: {
-        node: true
+        node: true,
       },
       files: [".eslintrc.{js,cjs}"],
       parserOptions: {
@@ -17,9 +17,9 @@ module.exports = {
     },
   ],
   parserOptions: {
-    ecmaVersion: "latest"
+    ecmaVersion: "latest",
   },
   rules: {
-    "no-unused-vars": ["warn"]
-  }
+    "no-unused-vars": ["warn"],
+  },
 };

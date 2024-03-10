@@ -28,8 +28,8 @@ const errors = {
   jwt: {
     invalidToken: "Invalid token",
     expired: "Token Expired",
-    notFound: "Token not found"
-  }
+    notFound: "Token not found",
+  },
 };
 
 module.exports = errors;

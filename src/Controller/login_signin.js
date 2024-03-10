@@ -13,7 +13,9 @@ control.signIn = async (req, res) => {
     if (!username || !password || !first_name || !last_name)
       return res.status(400).json({ ermessager: error.require.allFields });
 
-    const usenamerExists = await UserSQL.findOne({ where: { username: username } });
+    const usenamerExists = await UserSQL.findOne({
+      where: { username: username },
+    });
     if (usenamerExists)
       return res.status(400).json({ message: error.usernameExists });
 
@@ -64,7 +66,10 @@ control.logIn = async (req, res, next) => {
 
         const token = generateToken(user.id);
 
-        return res.status(200).header("Authorization", token).json({ message: "login Successful" })
+        return res
+          .status(200)
+          .header("Authorization", token)
+          .json({ message: "login Successful" });
       });
     });
   } catch (err) {

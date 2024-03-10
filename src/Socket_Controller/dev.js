@@ -1,5 +1,4 @@
 const colors = require("colors");
-const { parse } = require("cookie");
 
 function socketDev(socket, appWS, app) {
   console.log(colors.cyan("User Dev connected"));
@@ -8,10 +7,7 @@ function socketDev(socket, appWS, app) {
     console.log(appWS.engine);
   });
 
-  socket.on("session", async (data) => {
-    const SESSION = await isValidSession(data);
-    socket.emit("message", SESSION);
-  });
+  socket.on("session", async (data) => {});
 
   socket.on("disconnect", () => {
     console.log(colors.cyan("User disconnected"));

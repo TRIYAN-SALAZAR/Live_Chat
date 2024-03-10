@@ -17,7 +17,11 @@ control.getChats = async (req, res) => {
       .status(200)
       .json({ message: "Get Chats Successful", allChats: allChats });
   } catch (err) {
-    return res.status(500).json({ message: err.message, error: error.ServerError, a: 'tu puta madre' });
+    return res.status(500).json({
+      message: err.message,
+      error: error.ServerError,
+      a: "tu puta madre",
+    });
   }
 };
 
