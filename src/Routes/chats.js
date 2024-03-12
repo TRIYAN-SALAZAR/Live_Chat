@@ -2,7 +2,7 @@ const { Router } = require("express");
 const router = Router();
 
 const { getChats, createChatOrRoom } = require("../Controller/chats");
-const isAuthenticated = require("../middlewares/express/authenticate");
+const isAuthenticated = require("../middlewares/authenticate");
 
 router.route("/").get(isAuthenticated, getChats);
 

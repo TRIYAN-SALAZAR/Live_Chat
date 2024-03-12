@@ -58,10 +58,6 @@ const chat = require("./Socket_Controller/chats");
 const connectModeDev = (socket) => modeDev(socket);
 const socketChats = (socket) => chat(socket, appWS);
 
-const isValidAuth = require("./middlewares/socket.io/isValidAuth");
-
-appWS.of("/chat").use(isValidAuth);
-
 appWS.of("/chat").on("connect", socketChats);
 appWS.of("/dev").on("connect", connectModeDev);
 
