@@ -50,6 +50,9 @@ const appWS = new Server(httpServer);
 
 appWS.engine.use(morgan("dev"));
 
+const { isValidToken } = require("./Services/JWT");
+const error = require("./messagesWarnings/errorsMessage");
+
 const modeDev = require("./Socket_Controller/dev");
 const chat = require("./Socket_Controller/chats");
 
@@ -58,6 +61,16 @@ const socketChats = (socket) => chat(socket, appWS);
 
 appWS.of("/chat").on("connect", socketChats);
 appWS.of("/dev").on("connect", connectModeDev);
+
+appWS.use((socket, next) => {
+  const token = socket.handshake.headers["Authorization"];
+  if (!token) return next(new Error(error.jwt.notFound));
+
+  const isValid = isValidToken(token);
+  if (!isValid) return next(new Error(error.notAuthenticated));
+
+  next();
+})
 
 appWS.emit("message", "Hello user from Socket.io");
 
