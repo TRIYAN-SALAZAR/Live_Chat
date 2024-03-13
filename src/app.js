@@ -39,13 +39,11 @@ app.set("port", process.env.PORT || 3000);
 const SignIn = require("./Routes/signIn");
 const Login = require("./Routes/logIn");
 const LogOut = require("./Routes/logOut");
-const Profile = require("./Routes/profile");
 const Chats = require("./Routes/chats");
 
 app.use("/signin", SignIn);
 app.use("/login", Login);
 app.use("/chats", Chats);
-app.use("/profile", Profile);
 app.use("/logout", LogOut);
 
 const appWS = new Server(httpServer);

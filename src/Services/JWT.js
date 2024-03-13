@@ -2,11 +2,11 @@ const jwt = require("jsonwebtoken");
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.TOKEN_SECRET, {
-    expiresIn: "2h",
+    expiresIn: "20s",
     subject: "auth",
     issuer: "backend service",
     audience: ["client", "web"],
-    algorithm: "HS256",
+    algorithm: "HS256"
   });
 };
 
@@ -17,10 +17,9 @@ const isValidToken = (token, id) => {
       issuer: "backend service",
       audience: ["client", "web"],
       algorithms: ["HS256"],
-      id: id,
     });
-
-    return decoded;
+    
+    return decoded.id === id;
   } catch (err) {
     return false;
   }

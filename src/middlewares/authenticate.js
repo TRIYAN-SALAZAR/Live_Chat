@@ -3,8 +3,7 @@ const { isValidToken } = require("../Services/JWT");
 async function isAuthenticated(req, res, next) {
   try {
     const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    if (token === null || token === undefined)
+    if (authHeader === null || authHeader === undefined)
       return res.status(401).json({ err: error.jwt.notFound });
 
     const isValid = isValidToken(authHeader, req.session.data.id);
