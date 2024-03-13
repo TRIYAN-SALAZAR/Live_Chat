@@ -1,3 +1,8 @@
+/**
+ * Generates a random ID consisting of letters and digits.
+ *
+ * @return {string} The randomly generated ID.
+ */
 function generateRandomID() {
   var letters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

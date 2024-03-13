@@ -42,12 +42,14 @@ control.createChatOrRoom = async (req, res) => {
       refMessage: messagesCreated._id,
       chatName: chatName,
     });
-
     if (!chatCreated) throw new Error(error.notCreated);
-    await User.updateOne(
-      { userID: req.session.data.id },
-      { $push: { chats: chatCreated._id } },
-    );
+
+    participants.forEach(async (participant) => {
+      await User.updateOne(
+        { userID: participant.userID },
+        { $push: { chats: chatCreated._id } },
+      );
+    });
 
     return res.status(200).json({ message: "Chat created" });
   } catch (err) {

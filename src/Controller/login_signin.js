@@ -64,7 +64,7 @@ control.logIn = async (req, res, next) => {
       req.session.save(function (err) {
         if (err) next(err);
 
-        const token = generateToken(user.id);
+        const token = generateToken(user.id, user.username);
 
         return res
           .status(200)
