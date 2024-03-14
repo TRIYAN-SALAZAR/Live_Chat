@@ -59,9 +59,6 @@ const chat = require("./Socket_Controller/chats");
 const connectModeDev = (socket) => modeDev(socket);
 const socketChats = (socket) => chat(socket, appWS);
 
-appWS.of("/chat").on("connect", socketChats);
-appWS.of("/dev").on("connect", connectModeDev);
-
 appWS.use((socket, next) => {
   const token = socket.handshake.headers["Authorization"];
   if (!token) return next(new Error(error.jwt.notFound));
@@ -70,8 +67,9 @@ appWS.use((socket, next) => {
   if (!isValid) return next(new Error(error.notAuthenticated));
 
   next();
-})
+});
 
-appWS.emit("message", "Hello user from Socket.io");
+appWS.of("/chat").on("connect", socketChats);
+appWS.of("/dev").on("connect", connectModeDev);
 
 module.exports = { app, httpServer };

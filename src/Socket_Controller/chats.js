@@ -1,30 +1,30 @@
 const Chats = require("../Schemas/noSQL/chat");
 const Messages = require("../Schemas/noSQL/messages");
-const colors = require("colors");
 
 function chats(socket, io) {
-  const chat = socket.handshake.query.chat;
-  if (chat) socket.join(chat);
+  const roomOrChat = socket.handshake.query.chat;
+  if (roomOrChat) socket.join(roomOrChat);
 
   socket.on("message", async (data) => {
     try {
-      if (chat) {
-        const referenceChat = await Chats.findOne({ _id: chat });
+      io.to(roomOrChat).broadcast.emit("message", data);
+
+      if (roomOrChat) {
+        const referenceChat = await Chats.findOne({ _id: roomOrChat });
         await Messages.updateOne(
           { _id: referenceChat.refMessage },
           { $push: { messages: data } },
         );
       }
-
-      socket.broadcast.to(chat).emit("message", data);
     } catch (err) {
       console.log(err);
-      socket.emit("error", err);
+      socket.emit("error", "error to send message");
     }
   });
 
   socket.on("disconnect", () => {
-    console.log(colors.red("User disconnected"));
+    if (roomOrChat) socket.leave(roomOrChat);
+    socket.emit("disconnected", "User disconnected");
   });
 }
 

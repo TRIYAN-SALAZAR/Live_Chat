@@ -7,8 +7,8 @@
     "dev": "nodemon node ./src/index.js",
     "bugs": "node ./src/index.js --inspect:127.0.0.1:9229",
     "start": "node ./src/index.js",
-    "format": "prettier --write .",
-    "check": "prettier --check ."
+    "format": "npx prettier --write .",
+    "check": "npx prettier --check ."
   },
   "author": "Jorge A. Ozuna Salazar",
   "license": "ISC",
