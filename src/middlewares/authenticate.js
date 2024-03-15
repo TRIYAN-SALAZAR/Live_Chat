@@ -19,4 +19,17 @@ async function isAuthenticated(req, res, next) {
   }
 }
 
-module.exports = isAuthenticated;
+function socketAuthenticate(socket, next) {
+  const userID = socket.handshake.headers["userID"];
+  const authHeader = socket.handshake.headers["authorization"];
+  if (authHeader === null || authHeader === undefined)
+    return next(new Error(error.jwt.notFound));
+
+  const isValid = isValidToken(authHeader, userID);
+  if (isValid instanceof Error) throw new Error(isValid.message);
+
+  if (!isValid) return next(new Error(error.notAuthenticated));
+  next();
+}
+
+module.exports = { isAuthenticated, socketAuthenticate };
