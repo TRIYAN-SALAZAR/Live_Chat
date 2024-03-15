@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require("uuid");
 const Chats = require("../Schemas/noSQL/chat");
 const Messages = require("../Schemas/noSQL/messages");
 
@@ -11,7 +12,7 @@ async function chats(socket, io) {
 
   socket.on("message", async (data) => {
     try {
-      io.to(roomOrChat).broadcast.emit("message", data);
+      data.id = uuidv4();
 
       if (roomOrChat) {
         await Messages.updateOne(
@@ -19,6 +20,8 @@ async function chats(socket, io) {
           { $push: { messages: data } },
         );
       }
+
+      io.to(roomOrChat).broadcast.emit("message", data);
     } catch (err) {
       console.log(err);
       socket.emit("error", "error to send message");
@@ -27,14 +30,14 @@ async function chats(socket, io) {
 
   socket.on("edit-message", async (data) => {
     try {
-      io.to(roomOrChat).broadcast.emit("edit-message", data);
-
       if (roomOrChat) {
         await Messages.updateOne(
-          { _id: referenceChat.refMessage },
-          { $set: { messages: data } },
+          { _id: referenceChat.refMessage, "messages.id": data.id },
+          { $set: { "messages.$.content": data.content } },
         );
       }
+
+      io.to(roomOrChat).broadcast.emit("edit-message", data);
     } catch (err) {
       console.log(err);
       socket.emit("error", "error to edit message");
@@ -43,14 +46,14 @@ async function chats(socket, io) {
 
   socket.on("delete-message", async (data) => {
     try {
-      io.to(roomOrChat).broadcast.emit("delete-message", data);
-
       if (roomOrChat) {
         await Messages.updateOne(
-          { _id: referenceChat.refMessage },
-          { $pull: { messages: data } },
+          { _id: referenceChat.refMessage, "messages.id": data.id },
+          { $pull: { messages: { id: data.id } } },
         );
       }
+
+      io.to(roomOrChat).broadcast.emit("delete-message", data);
     } catch (err) {
       console.log(err);
       socket.emit("error", "error to delete message");
