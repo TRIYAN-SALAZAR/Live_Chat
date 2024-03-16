@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 const colors = require("colors");
-const dotenv = require("dotenv");
 
-dotenv.config();
-mongoose.set("strictQuery", true);
-
+mongoose.set("strictQuery", false);
 async function connectToDatabase() {
   try {
     console.log(colors.yellow("Establishing connection to the database"));

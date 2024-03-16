@@ -21,7 +21,7 @@ async function chats(socket, io) {
         );
       }
 
-      io.to(roomOrChat).broadcast.emit("message", data);
+      io.to(roomOrChat).emit("message", data);
     } catch (err) {
       console.log(err);
       socket.emit("error", "error to send message");

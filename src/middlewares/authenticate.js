@@ -5,12 +5,12 @@ async function isAuthenticated(req, res, next) {
     const authHeader = req.headers["authorization"];
     if (authHeader === null || authHeader === undefined)
       return res.status(401).json({ err: error.jwt.notFound });
+    if (req.session.data === undefined)
+      return res.status(401).json({ err: error.notAuthenticated });
 
     const isValid = isValidToken(authHeader, req.session.data.id);
     if (isValid instanceof Error) throw new Error(isValid.message);
-
-    if (!isValid || req.session.data === undefined)
-      return res.status(401).json({ err: error.notAuthenticated });
+    if (!isValid) return res.status(401).json({ err: error.notAuthenticated });
 
     next();
   } catch (err) {

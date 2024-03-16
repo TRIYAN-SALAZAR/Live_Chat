@@ -5,6 +5,9 @@ const messageSchema = new Schema({
     type: [Object],
     default: [Object],
   },
+  refChat: {
+    type: String,
+  },
 });
 
 module.exports = model("Message", messageSchema);

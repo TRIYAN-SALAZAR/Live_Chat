@@ -35,13 +35,16 @@ control.createChatOrRoom = async (req, res) => {
       if (exists) return res.status(400).json({ err: error.alreadyExists });
     }
 
-    const messagesCreated = await Message.create();
+    const messagesCreated = await Message.create({ messages: [] });
     const chatCreated = await Chat.create({
       participants: participants,
       isRoom: isRoom || false,
       refMessage: messagesCreated._id,
       chatName: chatName,
     });
+
+    messagesCreated.updateOne({ chat: chatCreated._id });
+
     if (!chatCreated) throw new Error(error.notCreated);
 
     participants.forEach(async (participant) => {
@@ -53,7 +56,9 @@ control.createChatOrRoom = async (req, res) => {
 
     return res.status(200).json({ message: "Chat created" });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    return res
+      .status(500)
+      .json({ message: err.message, error: error.ServerError });
   }
 };
 

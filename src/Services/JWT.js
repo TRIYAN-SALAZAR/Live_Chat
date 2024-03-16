@@ -30,6 +30,7 @@ function generateToken(id, username) {
  */
 function isValidToken(token, id) {
   try {
+    if (!token || id === undefined) return false;
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET, {
       subject: "auth",
       issuer: "backend service",
@@ -37,7 +38,7 @@ function isValidToken(token, id) {
       algorithms: ["HS256"],
     });
 
-    return decoded.id === id;
+    return decoded.data.id === id;
   } catch (err) {
     return err;
   }
