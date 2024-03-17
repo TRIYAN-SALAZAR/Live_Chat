@@ -20,19 +20,24 @@ async function isAuthenticated(req, res, next) {
 }
 
 function socketAuthenticate(socket, next) {
-  console.log("authenticating socket...");
-  const userID = socket.handshake.headers["userid"];
-  const authHeader = socket.handshake.headers["authorization"];
-  if (authHeader === undefined) return next(new Error(error.jwt.notFound));
+  try {
+    console.log("authenticating socket...");
+    const userID = socket.handshake.headers["userid"];
+    const authHeader = socket.handshake.headers["authorization"];
+    if (authHeader === undefined) return next(new Error(error.jwt.notFound));
 
-  if (userID === undefined) return next(new Error(error.jwt.idNotFound));
+    if (userID === undefined) return next(new Error(error.jwt.idNotFound));
 
-  const isValid = isValidToken(authHeader, userID);
-  if (isValid instanceof Error) throw new Error(isValid.message);
+    const isValid = isValidToken(authHeader, userID);
+    if (isValid instanceof Error) next(new Error(isValid.message));
 
-  if (!isValid) return next(new Error(error.notAuthenticated));
+    if (!isValid) return next(new Error(error.notAuthenticated));
 
-  next();
+    next();
+  } catch (err) {
+    console.log(err);
+    next(new Error(error.ServerError));
+  }
 }
 
 module.exports = { isAuthenticated, socketAuthenticate };
