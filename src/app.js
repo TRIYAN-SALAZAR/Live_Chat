@@ -57,7 +57,8 @@ const connectModeDev = (socket) => modeDev(socket);
 const socketChats = (socket) => chat(socket, appWS);
 
 const { socketAuthenticate } = require("./middlewares/authenticate");
-appWS.use(socketAuthenticate);
+
+appWS.of("/chat").use(socketAuthenticate);
 
 appWS.of("/chat").on("connect", socketChats);
 appWS.of("/dev").on("connect", connectModeDev);

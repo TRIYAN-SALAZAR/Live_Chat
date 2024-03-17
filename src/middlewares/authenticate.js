@@ -20,15 +20,18 @@ async function isAuthenticated(req, res, next) {
 }
 
 function socketAuthenticate(socket, next) {
-  const userID = socket.handshake.headers["userID"];
+  console.log("authenticating socket...");
+  const userID = socket.handshake.headers["userid"];
   const authHeader = socket.handshake.headers["authorization"];
-  if (authHeader === null || authHeader === undefined)
-    return next(new Error(error.jwt.notFound));
+  if (authHeader === undefined) return next(new Error(error.jwt.notFound));
+
+  if (userID === undefined) return next(new Error(error.jwt.idNotFound));
 
   const isValid = isValidToken(authHeader, userID);
   if (isValid instanceof Error) throw new Error(isValid.message);
 
   if (!isValid) return next(new Error(error.notAuthenticated));
+
   next();
 }
 

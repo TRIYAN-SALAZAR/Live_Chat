@@ -29,6 +29,8 @@ const errors = {
     invalidToken: "Invalid token",
     expired: "Token Expired",
     notFound: "Token not found",
+    notVerified: "Token not verified",
+    idNotFound: "UserID not found",
   },
 };
 
