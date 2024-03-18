@@ -1,7 +1,6 @@
 # ~ Live Chat ~
 
-Creacion del backend para un chat en tiempo real con nodeJS,
-el cual tendra multiple funciones como crear chats grupales, bloquear usuarios, borrar chats, entre otras caracteristicas.
+Backend API develoment for chat real time and sign in with nodeJS, which has multiple functions, such as creating group chats, blocking chats, among others features.
 
 ## Requeriments
 
@@ -27,4 +26,16 @@ Start the server in local
 
 ```bash
   npm run dev
+```
+
+Give prettier formatting
+
+```bash
+  npm run format
+```
+
+Check prettier format
+
+```bash
+  npm run check
 ```

@@ -9,8 +9,7 @@ async function isAuthenticated(req, res, next) {
       return res.status(401).json({ err: error.notAuthenticated });
 
     const isValid = isValidToken(authHeader, req.session.data.id);
-    if (!isValid) 
-      return res.status(401).json({ err: error.notAuthenticated });
+    if (!isValid) return res.status(401).json({ err: error.notAuthenticated });
 
     next();
   } catch (err) {
@@ -23,18 +22,16 @@ function socketAuthenticate(socket, next) {
   try {
     const userID = socket.handshake.headers["userid"];
     const authHeader = socket.handshake.headers["authorization"];
-    if (authHeader === undefined) 
+    if (authHeader === undefined)
       return next(new Error(error.jwt.tokenNotFound));
 
-    if (userID === undefined) 
-      return next(new Error(error.jwt.idNotFound));
+    if (userID === undefined) return next(new Error(error.jwt.idNotFound));
 
     const isValid = isValidToken(authHeader, userID);
-    if (!isValid) 
-      return next(new Error(error.notAuthenticated));
+    if (!isValid) return next(new Error(error.notAuthenticated));
 
     socket.data = isValid;
-    
+
     next();
   } catch (err) {
     console.log(err);

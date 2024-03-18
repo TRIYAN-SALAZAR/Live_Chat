@@ -50,7 +50,9 @@ async function chats(socket, io) {
         );
       }
 
-      io.of("/chat").to(roomOrChat).emit("delete-message", "Message deleted", true);
+      io.of("/chat")
+        .to(roomOrChat)
+        .emit("delete-message", "Message deleted", true);
     } catch (err) {
       console.log(err);
       socket.emit("error", "error to delete message");
