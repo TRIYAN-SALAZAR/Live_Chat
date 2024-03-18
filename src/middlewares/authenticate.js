@@ -4,13 +4,13 @@ async function isAuthenticated(req, res, next) {
   try {
     const authHeader = req.headers["authorization"];
     if (authHeader === null || authHeader === undefined)
-      return res.status(401).json({ err: error.jwt.notFound });
+      return res.status(401).json({ err: error.jwt.tokenNotFound });
     if (req.session.data === undefined)
       return res.status(401).json({ err: error.notAuthenticated });
 
     const isValid = isValidToken(authHeader, req.session.data.id);
-    if (isValid instanceof Error) throw new Error(isValid.message);
-    if (!isValid) return res.status(401).json({ err: error.notAuthenticated });
+    if (!isValid) 
+      return res.status(401).json({ err: error.notAuthenticated });
 
     next();
   } catch (err) {
@@ -21,18 +21,20 @@ async function isAuthenticated(req, res, next) {
 
 function socketAuthenticate(socket, next) {
   try {
-    console.log("authenticating socket...");
     const userID = socket.handshake.headers["userid"];
     const authHeader = socket.handshake.headers["authorization"];
-    if (authHeader === undefined) return next(new Error(error.jwt.notFound));
+    if (authHeader === undefined) 
+      return next(new Error(error.jwt.tokenNotFound));
 
-    if (userID === undefined) return next(new Error(error.jwt.idNotFound));
+    if (userID === undefined) 
+      return next(new Error(error.jwt.idNotFound));
 
     const isValid = isValidToken(authHeader, userID);
-    if (isValid instanceof Error) next(new Error(isValid.message));
+    if (!isValid) 
+      return next(new Error(error.notAuthenticated));
 
-    if (!isValid) return next(new Error(error.notAuthenticated));
-
+    socket.data = isValid;
+    
     next();
   } catch (err) {
     console.log(err);

@@ -26,7 +26,7 @@ function generateToken(id, username) {
  *
  * @param {string} token - The token to be verified
  * @param {string} id - The id to compare with the decoded token id
- * @return {boolean | Error} True if the token is valid for the given id, otherwise an Error object
+ * @return {Object | Error} Return object data if the token is valid for the given id, otherwise an Error object
  */
 function isValidToken(token, id) {
   try {
@@ -39,8 +39,7 @@ function isValidToken(token, id) {
       algorithms: ["HS256"],
     });
 
-    console.log(decoded.data);
-    return decoded.data.id === id;
+    return decoded.data.id === id ? decoded.data : false;
   } catch (err) {
     return err;
   }

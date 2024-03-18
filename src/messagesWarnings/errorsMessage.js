@@ -28,7 +28,7 @@ const errors = {
   jwt: {
     invalidToken: "Invalid token",
     expired: "Token Expired",
-    notFound: "Token not found",
+    tokenNotFound: "Token not found",
     notVerified: "Token not verified",
     idNotFound: "UserID not found",
   },

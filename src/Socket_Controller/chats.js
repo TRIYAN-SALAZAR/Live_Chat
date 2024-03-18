@@ -12,6 +12,9 @@ async function chats(socket, io) {
 
   socket.on("message", async (data) => {
     data.id = uuidv4();
+    data.username = socket.data.username;
+    const date = new Date();
+    data.date = date.toLocaleString();
 
     if (roomOrChat) {
       await Messages.updateOne(
@@ -31,7 +34,7 @@ async function chats(socket, io) {
         );
       }
 
-      socket.to(roomOrChat).emit("edit-message", data);
+      io.of("/chat").to(roomOrChat).emit("edit-message", data);
     } catch (err) {
       console.log(err);
       socket.emit("error", "error to edit message");
@@ -47,7 +50,7 @@ async function chats(socket, io) {
         );
       }
 
-      socket.to(roomOrChat).emit("delete-message", data);
+      io.of("/chat").to(roomOrChat).emit("delete-message", "Message deleted", true);
     } catch (err) {
       console.log(err);
       socket.emit("error", "error to delete message");
